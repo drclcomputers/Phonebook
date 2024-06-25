@@ -1,9 +1,12 @@
 #include "app.h"
+#include "cryptographie.h"
+
+cryptographiex crypto5;
 
 int appx::contacte() {
-	ifstream fin("./files/nr_contacte.pb");
-	int nr; fin >> nr;
-	fin.close();
+	ifstream fin1("./files/nr_contacte.pb");
+	int nr; fin1 >> nr;
+	fin1.close();
 	return nr;
 }
 
@@ -17,9 +20,9 @@ void appx::add() {
 	ofstream fout(linie);
 
 	char nume[101], prenume[101], number[51], description[501];
-	cin.ignore();
-	cout << "Enter first name: ";
+	cout << "Enter first name (0 - exit): ";
 	cin.getline(nume, 100);
+	if (strcmp("0", nume)>=0) return;
 	cout << "Enter last name: ";
 	cin.getline(prenume, 100);
 	cout << "Enter phone number: ";
@@ -27,12 +30,27 @@ void appx::add() {
 	cout << "Enter a short description: ";
 	cin.getline(description, 500);
 
-	fout << nume << "  ,  " << prenume << "  ,  " << number << "  ,  " << description << '\n';
+	char text[1001]="";
+	strcat(text, nume);
+	strcat(text, "  ,  ");
+	strcat(text, prenume);
+	strcat(text, "  ,  ");
+	strcat(text, number);
+	strcat(text, "  ,  ");
+	strcat(text, description);
+
+	strcpy(text, crypto5.encrypt(text, 10));
+
+	//cout << text;
+
+	//fout << nume << "  ,  " << prenume << "  ,  " << number << "  ,  " << description << '\n';
+	fout << text << '\n';
 	fout.close();
 
-	ofstream fin("./files/nr_contacte.pb", ios::trunc);
-	fin << nr;
-	fin.close();
+
+	ofstream fin2("./files/nr_contacte.pb", ios::trunc);
+	fin2 << nr;
+	fin2.close();
 	
 }
 
@@ -53,19 +71,20 @@ void appx::show(){
 		char text[1001];
 		ifstream fout(linie);
 		fout.getline(text, 1000);
+		strcpy(text, crypto5.decrypt(text, 10));
 		cout << text << '\n';
 		fout.close();
 	}
 	cout << "\n\nPress enter to continue . . .";
-	cin.ignore();
 	cin.get();
 }
 
 void appx::deleteperson(){
-	cin.ignore();
-	cout << "Enter contact index to delete: ";
+	//cin.ignore();
+	cout << "Enter contact index to delete (0 - exit): ";
 	int dele; cin >> dele;
 	int nr = contacte();
+	if (dele == 0) return;
 	while (dele<1 || dele>nr) {
 		cout << "Enter correct index: ";
 		cin >> dele;
@@ -77,7 +96,8 @@ void appx::deleteperson(){
 	strcat(linie, ".pb");
 	char text[1001];
 	ofstream fout(linie, ios::trunc);
-	fout << "Deleted\n";
+	char de[20] = "Deleted";
+	fout << crypto5.encrypt(de, 10) << '\n';
 	fout.close();
 
 	ifstream fin1("./files/deleted.pb");
@@ -91,10 +111,11 @@ void appx::deleteperson(){
 }
 
 void appx::search(){
-	cin.ignore();
+	//cin.ignore();
 	cout << "\nEnter person's first name to search: ";
 	char name[101]; cin.getline(name, 100);
 	int nr = contacte();
+	bool ok = 0;
 	for (int i = 1; i <= nr; i++) {
 		char linie[300] = "./files/";
 		char nrarray[20];
@@ -104,19 +125,24 @@ void appx::search(){
 		char text[1001];
 		ifstream fout(linie);
 		fout.getline(text, 1000);
+		strcpy(text, crypto5.decrypt(text, 10));
 		char text1[1001];
 		strcpy(text1, text);
 		char* p = strtok(text, "  ,  ");
 		if (p != NULL) {
-			if (strcmp(p, name) == 0 || strcmp(p, name) == 1)
+			if (strcmp(p, name) == 0) {
 				cout << i << ". " << text1 << '\n';
+				ok = 1;
+			}
 		}
 	}
+	if (!ok) cout << "No contact found!\n";
 	cout << "\n\nPress enter to continue . . .";
 	cin.get();
 }
 
 void appx::start(){
+	cin.clear();
 	cout << WHITE << "Phone Book ver 0.2\n\n1. Add Contact\n2. Show Phone Book\n3. Search\n4. Delete contact\n5. Exit\n\n" << "Enter option: " << BLUE;
 	char opt[10]; cin.getline(opt, 9);
 	int n = atoi(opt);
