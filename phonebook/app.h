@@ -16,4 +16,5 @@ public:
 	void deleteperson();
 	void search();
 	void start();
+	void reset();
 };

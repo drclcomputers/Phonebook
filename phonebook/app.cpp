@@ -118,13 +118,15 @@ void appx::search(){
 
 void appx::start(){
 	cout << WHITE << "Phone Book ver 0.2\n\n1. Add Contact\n2. Show Phone Book\n3. Search\n4. Delete contact\n5. Exit\n\n" << "Enter option: " << BLUE;
-	int n; cin >> n;
+	char opt[10]; cin.getline(opt, 9);
+	int n = atoi(opt);
 	cout << WHITE;
-	while (n < 1 || n>5) {
+	while (n < 1 || n > 5) {
 		cout << "Enter correct option: " << BLUE;
-		cin >> n;
+		cin.getline(opt, 9);
+		n = atoi(opt);
+		cout << WHITE;
 	}
-	cout << WHITE;
 	switch (n) {
 	case 1:
 		add();
@@ -144,4 +146,29 @@ void appx::start(){
 	}
 	system(CLEAR_SCREEN);
 	start();
+}
+
+void appx::reset() {
+	int nr = contacte();
+	for (int i = 1; i <= nr; i++) {
+		char linie[300] = "./files/";
+		char nrarray[20];
+		sprintf(nrarray, "%ld", i);
+		strcat(linie, nrarray);
+		strcat(linie, ".pb");
+		remove(linie);
+	}
+	ofstream fin("./files/nr_contacte.pb", ios::trunc);
+	fin << 0;
+	fin.close();
+
+	ofstream fin1("./files/deleted.pb", ios::trunc);
+	fin1 << 0;
+	fin1.close();
+
+	ofstream fin2("./files/login/user.pbg", ios::trunc);
+	fin2.close();
+
+	ofstream fin3("./files/login/pass.pbg", ios::trunc);
+	fin3.close();
 }

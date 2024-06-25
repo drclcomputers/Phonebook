@@ -22,13 +22,13 @@ int loginx::check() {
 		cout << WHITE << "It appears that no user exists. Enter new user: ";
 		char user[50]; cin.getline(user, 50);
 		if (strcmp(user, "exit") == 0) return 0;
-		//if (strcmp(user, "reset") == 0) return 2;
+		if (strcmp(user, "reset") == 0) return 2;
 		fin2 << crypto.encrypt(user, 10);
 
 		cout << "Enter new password: ";
 		char pass[50]; cin.getline(pass, 50);
 		if (strcmp(pass, "exit") == 0) return 0;
-		//if (strcmp(pass, "reset") == 0) return 2;
+		if (strcmp(pass, "reset") == 0) return 2;
 		fin1 << crypto.encrypt(pass, 10);
 
 		cout << "Now, you'll be directed to the login screen.\n\n";
@@ -46,12 +46,12 @@ int loginx::func() {
 	welcome();
 	int o = check();
 	if (o == 0) return 0;
-	//if (o == 2) return 2;
+	if (o == 2) return 2;
 	cout << YELLOW << "Login\n\n" << WHITE;
 	cout << "User: ";
 	char user[50], realuser[50]; cin.getline(user, 50);
 	if (strcmp(user, "exit") == 0) return 0;
-	//if (strcmp(user, "reset") == 0) return 2;
+	if (strcmp(user, "reset") == 0) return 2;
 	strcpy(user, crypto.encrypt(user, 10));
 
 	ifstream fin("./files/login/user.pbg");
@@ -62,14 +62,14 @@ int loginx::func() {
 		cout << RED << "Incorrect User! Enter correct user (type 'exit' to exit): " << WHITE;
 		cin.getline(user, 50);
 		if (strcmp(user, "exit") == 0) return 0;
-		//if (strcmp(user, "reset") == 0) return 2;
+		if (strcmp(user, "reset") == 0) return 2;
 		strcpy(user, crypto.encrypt(user, 10));
 	}
 
 	cout << WHITE << "Password: ";
 	char pass[50], realpass[50]; cin.getline(pass, 50);
 	if (strcmp(pass, "exit") == 0) return 0;
-	//if (strcmp(pass, "reset") == 0) return 2;
+	if (strcmp(pass, "reset") == 0) return 2;
 	strcpy(pass, crypto.encrypt(pass, 10));
 
 
@@ -82,7 +82,7 @@ int loginx::func() {
 		cout << RED << "Incorrect Password! Enter correct password (type 'exit' to exit): " << WHITE;
 		cin.getline(pass, 50);
 		if (strcmp(pass, "exit") == 0) return 0;
-		//if (strcmp(pass, "reset") == 0) return 2;
+		if (strcmp(pass, "reset") == 0) return 2;
 		strcpy(pass, crypto.encrypt(pass, 10));
 	}
 

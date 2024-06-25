@@ -4,10 +4,14 @@
 
 int main() {
 	loginx login;
-	bool start = login.func();
-	if (start) {
+	int start = login.func();
+	if (start==1) {
 		appx app;
 		app.start();
+	}
+	else if (start == 2) {
+		appx app;
+		app.reset();
 	}
 
 	return 0;
