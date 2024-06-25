@@ -130,7 +130,7 @@ void appx::search(){
 		strcpy(text1, text);
 		char* p = strtok(text, "  ,  ");
 		if (p != NULL) {
-			if (strcmp(p, name) == 0) {
+			if (strcmp(p, name) == 0 || strchr(p, name[0])!=NULL) {
 				cout << i << ". " << text1 << '\n';
 				ok = 1;
 			}
